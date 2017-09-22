@@ -13,8 +13,25 @@
 
 	      #map {
 	        height: 100%;
-	        width: 40%;
+	        width: 60%;
 	        float:left;
+	        -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+			-moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+			box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	      }
+
+	      h1 {
+	      	padding: 10px;
+	      	color: #58595B;
+	      	font-family: serif, sans-serif;
+	      	text-shadow:2px 2px 2px #333333;
+	      }
+
+
+	      .btn {
+	      	 width: 80%;
+	      	 height: 40px;
+	      	 
 	      }
       /* Optional: Makes the sample page fill the window. */
 	      html, body {
@@ -24,7 +41,7 @@
 	      }
 
 	      form {
-	      	width: 60%;
+	      	width: 40%;
    			float: right;
 	      }
 
@@ -145,10 +162,9 @@
   	}
 
 
-
   	function getVenues(lat, lon, query, radius){
-  			$('#lat').val(lat);
-  			$('#lon').val(lon);
+  			$('#lat').val(parseFloat(lat), 10);
+  			$('#lon').val(parseFloat(lon), 10);
     		var venueSearchUrl 	= 'https://api.foursquare.com/v2/venues/search?v=20161016&ll=' + lat + '%2C%20' + lon + '&query=' + query + '&intent=checkin&radius=' + radius + '&client_id=D0LEACTGUFCGELIPWTOEE2YNT0FUQGXA0ZC3UV5AGBEBNWMX&client_secret=EGYLL1PAUWCOPPZVCNHIRFQ3LBKVF4T1SETDMEP5COMZQZOA';
 
     		$.ajax({
@@ -225,6 +241,8 @@
 		function showPosition(position) {
     		var lat = position.coords.latitude
     		var lon = position.coords.longitude;
+    		localStorage.setItem("lat", lat);
+    		localStorage.setItem("lon", lon);
     		initMap(lat, lon);
     		getVenues(lat, lon, 'coffee', 100000);
 		}
@@ -240,8 +258,8 @@
 
 		$('#searchBtn').on('click', function(e){
 			e.preventDefault();
-			var lat = parseInt($('#lat').val());
-			var lon = parseInt($('#lon').val());
+			var lat = parseFloat(localStorage.getItem('lat'), 16);
+			var lon = parseFloat(localStorage.getItem('lon'), 16);
 			var query = $('#query').val();
 			var radius = $('#radius').val() * 1000;
 			if(query == '' && query.length == 0){
@@ -249,7 +267,7 @@
 			} else {
 				$('#errorMsg').text('');
 			}
-			if(radius > 100 || radius < 0.01){
+			if(radius < 1000 || radius > 100000){
 				$('#errorMsg').text('Search radius must be between 10m to 100km');
 				return false;
 			} else {
