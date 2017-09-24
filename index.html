@@ -7,212 +7,25 @@
     	<meta name="viewport" content="width=device-width, initial-scale=1">
     	<link rel="stylesheet" href="src/css/bootstrap.min.css">
     	<link rel="stylesheet" href="src/css/style.css">
-    	<style>
-
-    	 
-
-	      #map {
-	        height: 100%;
-	        width: 60%;
-	        float:left;
-	        -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
-			-moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
-			box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
-	      }
-
-	      h1 {
-	      	padding: 10px;
-	      	color: #58595B;
-	      	font-family: serif, sans-serif;
-	      	text-shadow:2px 2px 2px #333333;
-	      }
-
-
-	      .btn {
-	      	 width: 80%;
-	      	 height: 40px;
-	      	 
-	      }
-      /* Optional: Makes the sample page fill the window. */
-	      html, body {
-	        height: 100%;
-	        margin: 0;
-	        padding: 0;
-	      }
-
-	      form {
-	      	width: 40%;
-   			float: right;
-	      }
-
-	      input[type=text] {
-	      	width: 80%;
-		    border-radius: 5px;
-		    height: 35px;
-		    -webkit-transition: all 0.30s ease-in-out;
-		   -moz-transition: all 0.30s ease-in-out;
-		   -ms-transition: all 0.30s ease-in-out;
-		   -o-transition: all 0.30s ease-in-out;
-		   outline: none;
-		   padding: 3px 0px 3px 3px;
-		   margin: 5px 1px 3px 0px;
-		   border: 1px solid #DDDDDD;
-	      }
-
-	      input[type=text]:focus {
-	      	  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
-			  padding: 3px 0px 3px 3px;
-			  margin: 5px 1px 3px 0px;
-			  border: 1px solid rgba(81, 203, 238, 1);
-	      }
-
-	      #radius {
-	      	margin-top:10px;
-	      }
-
-	      #errorMsg {
-	      	color: red;
-	      }
-    </style>
     </head>
     <body>
-    	<div id="map"></div>
-    	<form class='text-center'>
-    		<h1>Venues Search</h1>
-    		<input type="text" id='query' placeholder="Search for..."><br>
-    		<input type="text" id='radius' placeholder="Distance(km)"><br>
-    		<input type="text" style='display: none' id='lat'>
-    		<input type="text" style='display: none' id='lon'>
-    		<p id='errorMsg'></p>
-    		<button type='button' class="btn btn-primary mx-auto" id='searchBtn'>Search</button>
+    	
     		
-    	</form>
+    			<div id="map"></div>
+    			
+    			<form class='text-center'>
+		    		<h1>Venues Search</h1>
+		    		<input type="text" id='query' placeholder="Search for..."><br>
+		    		<input type="text" id='radius' placeholder="Distance(km)"><br>
+		    		<p id='errorMsg'></p>
+		    		<button type='button' class="btn btn-primary mx-auto" id='searchBtn'>Search</button>
+	    		</form>
+    		
+    	
+    	
     	
 
-	<script>
-	  
-
-      function initMap(lat, lon, locations, icons) {
-      	var zoom = 4;
-      	if( lat && lon ){
-      		var userInput = true;
-      		var zoom = 8;
-      	}
-      	lat = lat ||  52.37
-      	lon = lon ||  4.89
-
-        var map = new google.maps.Map(document.getElementById('map'), {
-        	center: {lat: lat, lng: lon}, 
-        	zoom: zoom
-        });
-
-        var infowindow = new google.maps.InfoWindow({
-          content: 'contentString'
-        });
-
-        if(userInput){
-	        	var myLatlng = new google.maps.LatLng(lat, lon);
-	        	marker = new google.maps.Marker({
-	        	size: new google.maps.Size(100, 100),
-		   		map: map,
-		   		draggable: true,	
-		    	animation: google.maps.Animation.DROP,
-		    	position: {lat: lat, lng: lon}
-			});
-
-
-
-    		marker.addListener('click', toggleBounce);
-
-    		if(locations) {
-    			var markers = locations.forEach(function(item, i) {
-    			  var icon = icons[i] ? icons[i].icon[item.type]  :  null; 
-    			  var address = item.location.address ? item.location.address : item.location.country
-    			  var city = item.location.city ? item.location.city : '';
-    			  var content = '<div>' +
-				    			'<h3>' + item.name + '</h3>' +
-				    			'<h4>' + address + ', ' + city + '<h4>' +
-				    		'</div>';
-		          var marker = new google.maps.Marker({
-		            position: item.position,
-		            icon: icon,
-		            map: map,
-		          });
-
-		          
-	          	google.maps.event.addListener(marker, 'click', function() {
-			   		infowindow.setContent(content);
-			   		infowindow.open(map, this);
-					});
-        		});
-
-    		}
-
-			function toggleBounce() {
-			  if (marker.getAnimation() !== null) {
-			    marker.setAnimation(null);
-			  } else {
-			    marker.setAnimation(google.maps.Animation.BOUNCE);
-			  }
-			}
-
-			// To add the marker to the map, call setMap();
-			marker.setMap(map)
-	    }
-  	}
-
-
-  	function getVenues(lat, lon, query, radius){
-  			$('#lat').val(parseFloat(lat), 10);
-  			$('#lon').val(parseFloat(lon), 10);
-    		var venueSearchUrl 	= 'https://api.foursquare.com/v2/venues/search?v=20161016&ll=' + lat + '%2C%20' + lon + '&query=' + query + '&intent=checkin&radius=' + radius + '&client_id=D0LEACTGUFCGELIPWTOEE2YNT0FUQGXA0ZC3UV5AGBEBNWMX&client_secret=EGYLL1PAUWCOPPZVCNHIRFQ3LBKVF4T1SETDMEP5COMZQZOA';
-
-    		$.ajax({
-			   url: venueSearchUrl,
-			   data: {
-			      format: 'json'
-			   },
-			   error: function() {
-			      $('#info').html('<p>An error has occurred</p>');
-			   },
-			   dataType: 'jsonp',
-			   success: function(data) {
-			      var venues = data.response.venues;
-			      var locations = [];
-			      var icons = [];
-			      for(var i = 0; i < venues.length; i++){
-			      	var category = venues[i].categories[0] ? venues[i].categories[0].name  :  null;
-			      	var name = venues[i].name;
-			      	locations.push({
-			      		position: new google.maps.LatLng(venues[i].location.lat, venues[i].location.lng), 
-			      		type: category,
-			      		name: name,
-			      		location: venues[i].location
-			      	});
-
-			      	if(category){
-			      		var thumbKey = venues[i].categories[0].name;
-			      		var thumbValue = venues[i].categories[0].icon.prefix + '64' + venues[i].categories[0].icon.suffix
-			      		var thumbUrl = thumbValue.replace('ss3.4sqi.net', 'foursquare.com').replace('categories_v2', 'categories');
-			      		var obj = {};
-			      		obj[thumbKey] = thumbUrl;
-
-				      	icons.push({
-				      		icon: obj
-				      	})
-			      	}
-
-			      }
-
-			      initMap(lat, lon, locations, icons);
-			   },
-			   type: 'GET'
-			});
-
-  	}
-
-
-    </script>
+	
        
 
     <script type="text/javascript" src='src/js/jquery.min.js'></script>
@@ -222,67 +35,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv05RyXfj6uwc9LLynMcHNTBEkH8PQzH4"
     async defer></script>
 
-    <script type="text/javascript">
-    
-	(function(){
-
-		$( document ).ready(function() {
-		   getLocation();
-		})
-
-
-		function getLocation() {
-		    if (navigator.geolocation) {
-		       navigator.geolocation.getCurrentPosition(showPosition, showError);
-		        $('erroMsg').text("Geolocation is not supported by this browser.");
-		    }
-		}
-
-		function showPosition(position) {
-    		var lat = position.coords.latitude
-    		var lon = position.coords.longitude;
-    		localStorage.setItem("lat", lat);
-    		localStorage.setItem("lon", lon);
-    		initMap(lat, lon);
-    		getVenues(lat, lon, 'coffee', 100000);
-		}
-
-
-
-		function showError(error) {
-		    initMap();
-		    $('#errorMsg').text("Can't get user location");
-		    
-		}
-
-
-		$('#searchBtn').on('click', function(e){
-			e.preventDefault();
-			var lat = parseFloat(localStorage.getItem('lat'), 16);
-			var lon = parseFloat(localStorage.getItem('lon'), 16);
-			var query = $('#query').val();
-			var radius = $('#radius').val() * 1000;
-			if(query == '' && query.length == 0){
-				$('#errorMsg').text("Search field can't be empty");
-			} else {
-				$('#errorMsg').text('');
-			}
-			if(radius < 1000 || radius > 100000){
-				$('#errorMsg').text('Search radius must be between 10m to 100km');
-				return false;
-			} else {
-				$('#errorMsg').text('');
-			} 
-			if(!lat || !lon) getLocation();
-			else getVenues(lat, lon, query, radius)
-		})
-
-
-
-	}());
-    	
-    	
-    </script>
+   <script src="src/js/script.js"></script>
 
     </body>
 </html>

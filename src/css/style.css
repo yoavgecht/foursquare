@@ -1,0 +1,62 @@
+	      #map {
+	        height: 100%;
+	        width: 60%;
+	        float:left;
+	        -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+			-moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+			box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	      }
+
+	      h1 {
+	      	padding: 10px;
+	      	color: #58595B;
+	      	font-family: serif, sans-serif;
+	      	text-shadow:2px 2px 2px #333333;
+	      }
+
+
+	      .btn {
+	      	 width: 80%;
+	      	 height: 40px;
+	      	 
+	      }
+      
+	      html, body {
+	        height: 100%;
+	        margin: 0;
+	        padding: 0;
+	      }
+
+	      form {
+	      	width: 40%;
+   			float: right;
+	      }
+
+	      input[type=text] {
+	      	width: 80%;
+		    border-radius: 5px;
+		    height: 35px;
+		    -webkit-transition: all 0.30s ease-in-out;
+		   -moz-transition: all 0.30s ease-in-out;
+		   -ms-transition: all 0.30s ease-in-out;
+		   -o-transition: all 0.30s ease-in-out;
+		   outline: none;
+		   padding: 3px 0px 3px 3px;
+		   margin: 5px 1px 3px 0px;
+		   border: 1px solid #DDDDDD;
+	      }
+
+	      input[type=text]:focus {
+	      	  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+			  padding: 3px 0px 3px 3px;
+			  margin: 5px 1px 3px 0px;
+			  border: 1px solid rgba(81, 203, 238, 1);
+	      }
+
+	      #radius {
+	      	margin-top:10px;
+	      }
+
+	      #errorMsg {
+	      	color: red;
+	      }
